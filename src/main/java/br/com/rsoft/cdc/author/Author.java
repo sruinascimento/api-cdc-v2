@@ -1,6 +1,9 @@
 package br.com.rsoft.cdc.author;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
@@ -12,9 +15,14 @@ public class Author {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+    @NotBlank
     private String name;
+    @NotBlank
+    @Email
+    @Column(unique = true)
     private String email;
-    @Column(name = "personal_description", columnDefinition = "TEXT")
+    @NotBlank
+    @Column(name = "personal_description")
     private String personalDescription;
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -23,7 +31,9 @@ public class Author {
     public Author() {
     }
 
-    public Author(String name, String email, String personalDescription) {
+    public Author(@NotBlank String name,
+                  @NotBlank @Email String email,
+                  @NotBlank @Size(max = 400) String personalDescription) {
         this.name = name;
         this.email = email;
         this.personalDescription = personalDescription;
@@ -36,7 +46,8 @@ public class Author {
     @Override
     public String toString() {
         return "Author{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", personalDescription='" + personalDescription + '\'' +
                 ", createdAt=" + getCreatedAtBrazilianFormatted() +
